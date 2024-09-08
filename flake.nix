@@ -120,13 +120,12 @@
             ];
           };
 
-        platformHome = platform: let
+        platformHome = name: platform: let
           value = home platform;
         in {
-          inherit value;
-          name = "${value.config.home.username}@${value.config.local.hostname}";
+          inherit name value;
         };
       in
-        mapAttrs' (_: platformHome) (importAll {root = ./home/platforms;});
+        mapAttrs' platformHome (importAll {root = ./home/platforms;});
     };
 }

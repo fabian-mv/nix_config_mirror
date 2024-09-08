@@ -57,7 +57,11 @@
         inherit system;
 
         config = import ./pkgs/config nixpkgs.lib;
-        overlays = [nur.overlay self.overlays.default];
+        overlays = [
+          self.overlays.default
+          nur.overlay
+          nixGL.overlay
+        ];
       };
 
     pkgs = importPkgs nixpkgs;
@@ -101,11 +105,11 @@
 
       homeConfigurations = let
         registry = {...}: {
-          config.nix.registry = mapAttrs (_:
-            value {
+          config.nix.registry =
+            mapAttrs (_: value: {
               flake = value;
             })
-          flakes;
+            flakes;
         };
 
         home = platform:
@@ -114,17 +118,18 @@
 
             modules = [
               ./home
-              platforms
+              platform
               registry
               hm-isolation.homeManagerModule
             ];
+
+            extraSpecialArgs = {
+              inherit flakes;
+            };
           };
 
-        platformHome = name: platform: let
-          value = home platform;
-        in {
-          inherit name value;
-        };
+        platformHome = name: platform:
+          nameValuePair name (home platform);
       in
         mapAttrs' platformHome (importAll {root = ./home/platforms;});
     };

@@ -15,7 +15,6 @@
     flake-utils.url = "github:numtide/flake-utils";
     vpsadminos.url = "github:vpsfreecz/vpsadminos";
 
-
     homepage.url = "git+https://git.posixlycorrect.com/fabian/homepage.git?ref=master";
 
     conduwuit = {
@@ -53,109 +52,81 @@
   }: let
     system = "x86_64-linux";
 
-    importPkgs = flake: import flake {
-      inherit system;
+    importPkgs = flake:
+      import flake {
+        inherit system;
 
-      config = import ./pkgs/config nixpkgs.lib;
-      overlays = [ nur.overlay self.overlays.default ];
-    };
+        config = import ./pkgs/config nixpkgs.lib;
+        overlays = [nur.overlay self.overlays.default];
+      };
 
     pkgs = importPkgs nixpkgs;
 
     inherit (pkgs.local.lib) importAll;
 
     local = import ./pkgs;
-
   in
-  with pkgs.lib; {
-    formatter.${system} = pkgs.alejandra;
-    packages.${system} = pkgs.local;
+    with pkgs.lib; {
+      formatter.${system} = pkgs.alejandra;
+      packages.${system} = pkgs.local;
 
-    overlays.default = final: prev:
-      let
+      overlays.default = final: prev: let
         locals = local final prev;
       in
-      locals.override // {
-        local = locals;
-        unstable = importPkgs unstable;
-      };
-
-  nixosConfigurations = 
-    let
-      nixosSystem = { modules }: makeOverridable nixpkgs.lib.nixosSystem {
-        inherit modules pkgs system;
-
-        specialArgs = {
-          inherit flakes;
+        locals.override
+        // {
+          local = locals;
+          unstable = importPkgs unstable;
         };
-      };
 
-      hostConfig = host: nixosSystem {
-        modules = [
-          ./sys
-          host
-        ];
-      };
+      nixosConfigurations = let
+        nixosSystem = {modules}:
+          makeOverridable nixpkgs.lib.nixosSystem {
+            inherit modules pkgs system;
 
-    in
-    mapAttrs (_: hostConfig) (importAll { root = ./sys/platforms; });
-    
+            specialArgs = {
+              inherit flakes;
+            };
+          };
 
-  homeConfigurations = 
-  let
-    registry = { ... }: {
-      config.nix.registry = mapAttrs (
-        _: value {
-          flake = value;
-        }
-      ) flakes;
+        hostConfig = host:
+          nixosSystem {
+            modules = [
+              ./sys
+              host
+            ];
+          };
+      in
+        mapAttrs (_: hostConfig) (importAll {root = ./sys/platforms;});
+
+      homeConfigurations = let
+        registry = {...}: {
+          config.nix.registry = mapAttrs (_:
+            value {
+              flake = value;
+            })
+          flakes;
+        };
+
+        home = platform:
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+
+            modules = [
+              ./home
+              platforms
+              registry
+              hm-isolation.homeManagerModule
+            ];
+          };
+
+        platformHome = platform: let
+          value = home platform;
+        in {
+          inherit value;
+          name = "${value.config.home.username}@${value.config.local.hostname}";
+        };
+      in
+        mapAttrs' (_: platformHome) (importAll {root = ./home/platforms;});
     };
-
-    home = platform: home-manager.lib.homeManagerConfiguration {
-      inherit pkgs;
-
-      modules = [
-        ./home
-        platforms
-        registry
-        hm-isolation.homeManagerModule
-      ];
-    };
-
-    platformHome = platform:
-    let
-      value = home platform;
-    in
-    {
-      inherit value;
-      name = "${value.config.home.username}@${value.config.local.hostname}";
-    };
-  in
-  mapAttrs' (_: platformHome) (importAll { root = ./home/platforms; });
-  };
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

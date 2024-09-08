@@ -12,77 +12,150 @@
     impermanence.url = "github:nix-community/impermanence";
     hm-isolation.url = "github:3442/hm-isolation";
     nixGL.url = "github:guibou/nixGL";
-
     flake-utils.url = "github:numtide/flake-utils";
+    vpsadminos.url = "github:vpsfreecz/vpsadminos";
+
+
+    homepage.url = "git+https://git.posixlycorrect.com/fabian/homepage.git?ref=master";
+
+    conduwuit = {
+      url = "github:girlbossceo/conduwuit?ref=v0.4.5";
+      #FIXME: Podrá volver a "nixpkgs" una vez que rocksdb.enableLiburing llegue a stable
+      inputs.nixpkgs.follows = "unstable";
+    };
+
+    authentik-nix = {
+      url = "github:nix-community/authentik-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    mediawikiSkinCitizen = {
+      url = "github:StarCitizenTools/mediawiki-skins-Citizen/v2.27.0";
+      flake = false;
+    };
   };
 
-  outputs = {
+  outputs = flakes @ {
     self,
     nixpkgs,
     unstable,
     home-manager,
     nur,
+    impermanence,
     hm-isolation,
     nixGL,
-    ...
+    flake-utils,
+    vpsadminos,
+    homepage,
+    conduwuit,
+    mediawikiSkinCitizen,
+    authentik-nix,
   }: let
     system = "x86_64-linux";
 
-    pkgs = import nixpkgs {
+    importPkgs = flake: import flake {
       inherit system;
+
+      config = import ./pkgs/config nixpkgs.lib;
+      overlays = [ nur.overlay self.overlays.default ];
     };
 
-    inherit (pkgs) lib;
+    pkgs = importPkgs nixpkgs;
 
-    base = platform: {
-      name = platform;
-      value = nixpkgs.lib.nixosSystem {
-        inherit system;
+    inherit (pkgs.local.lib) importAll;
 
-        modules = [(import ./base)];
+    local = import ./pkgs;
+
+  in
+  with pkgs.lib; {
+    formatter.${system} = pkgs.alejandra;
+    packages.${system} = pkgs.local;
+
+    overlays.default = final: prev:
+      let
+        locals = local final prev;
+      in
+      locals.override // {
+        local = locals;
+        unstable = importPkgs unstable;
       };
-    };
 
-    home = platform: {
-      name = "fabian@${platform}";
-      value = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
+  nixosConfigurations = 
+    let
+      nixosSystem = { modules }: makeOverridable nixpkgs.lib.nixosSystem {
+        inherit modules pkgs system;
 
+        specialArgs = {
+          inherit flakes;
+        };
+      };
+
+      hostConfig = host: nixosSystem {
         modules = [
-          (import ./home {
-            inherit self nixpkgs unstable hm-isolation nixGL;
-          })
-
-          ./home/platforms/${platform}.nix
-
-          {
-            config.local = {inherit platform;};
-          }
+          ./sys
+          host
         ];
       };
+
+    in
+    mapAttrs (_: hostConfig) (importAll { root = ./sys/platforms; });
+    
+
+  homeConfigurations = 
+  let
+    registry = { ... }: {
+      config.nix.registry = mapAttrs (
+        _: value {
+          flake = value;
+        }
+      ) flakes;
     };
 
-    localPkgs = import ./pkgs;
+    home = platform: home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
 
-    platforms = domain:
-      map
-      (lib.removeSuffix ".nix")
-      (lib.attrNames (builtins.readDir ./${domain}/platforms));
-
-    configs = domain: builder:
-      lib.listToAttrs
-      (map builder (platforms domain));
-  in {
-    nixosConfigurations = configs "base" base;
-    homeConfigurations = configs "home" home;
-    packages.${system} = localPkgs pkgs;
-    formatter.${system} = pkgs.alejandra;
-
-    overlay = self: super: {
-      unstable = import unstable {
-        inherit (super) config system;
-      };
-      local = localPkgs self;
+      modules = [
+        ./home
+        platforms
+        registry
+        hm-isolation.homeManagerModule
+      ];
     };
+
+    platformHome = platform:
+    let
+      value = home platform;
+    in
+    {
+      inherit value;
+      name = "${value.config.home.username}@${value.config.local.hostname}";
+    };
+  in
+  mapAttrs' (_: platformHome) (importAll { root = ./home/platforms; });
   };
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

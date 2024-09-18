@@ -10,10 +10,10 @@
     ./i3.nix
     ./polybar.nix
     ./startx.nix
+    ./picom.nix
   ];
 
   services = {
-    picom.enable = true;
     dunst.enable = true;
     betterlockscreen.enable = true;
   };

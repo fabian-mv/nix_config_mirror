@@ -18,15 +18,17 @@
     enableSSHSupport = true;
   };
 
-  security.pam.services = {
-    login.u2fAuth = true;
-    sudo.u2fAuth = true;
-  };
+  security.pam = {
+    services = {
+      login.u2fAuth = true;
+      sudo.u2fAuth = true;
+    };
 
-  security.pam.yubico = {
-    enable = true;
-    debug = false;
-    mode = "challenge-response";
-    id = ["27677315"];
+    u2f = {
+      enable = true;
+      debug = false;
+      cue = true;
+      control = "sufficient";
+    };
   };
 }

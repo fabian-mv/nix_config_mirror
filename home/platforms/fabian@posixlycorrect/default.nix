@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ./lib
+    ./apps
     ./systemd
     ./gui
     ./isolation.nix

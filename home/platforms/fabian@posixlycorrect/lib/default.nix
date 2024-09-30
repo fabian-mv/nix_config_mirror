@@ -18,7 +18,6 @@
     file
     firefox
     gcc
-    gperftools
     gwenview
     htop
     killall

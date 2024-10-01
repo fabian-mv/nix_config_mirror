@@ -7,6 +7,7 @@
   imports = [
     ./steam
     ./terminal
+    ./neovim.nix
   ];
 
   home.packages = with pkgs; [
@@ -26,7 +27,6 @@
     man-pages
     man-pages-posix
     mpv
-    neovim
     obs-studio
     openrct2
     pavucontrol

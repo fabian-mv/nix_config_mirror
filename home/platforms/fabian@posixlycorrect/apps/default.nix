@@ -18,7 +18,6 @@
     deluge
     discord
     file
-    firefly
     firefox
     gcc
     gwenview

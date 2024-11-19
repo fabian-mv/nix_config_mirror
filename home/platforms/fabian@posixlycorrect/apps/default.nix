@@ -18,11 +18,13 @@
     deluge
     discord
     file
+    firefly
     firefox
     gcc
     gwenview
     htop
     killall
+    kdenlive
     libreoffice-fresh
     lutris
     man-pages

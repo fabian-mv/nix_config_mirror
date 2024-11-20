@@ -7,6 +7,11 @@
   ...
 }:
 with lib; {
+  
+  imports = [
+    ./modules
+  ];
+
   xdg.enable = true;
 
   programs = {

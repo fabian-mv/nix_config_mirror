@@ -6,8 +6,6 @@
 }: {
   imports = [
     ./steam
-    ./terminal
-    ./neovim.nix
   ];
 
   home.packages = with pkgs; [

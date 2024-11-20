@@ -12,6 +12,9 @@
     ./isolation.nix
   ];
 
+  local.apps.terminal.enable = true;
+  local.apps.neovim.enable = true;
+
   nix.registry = {
     "system".to = {
       type = "path";

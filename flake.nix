@@ -68,7 +68,7 @@
 
     inherit (pkgs.local.lib) importAll;
 
-    local = import ./pkgs;
+    local = final: prev: import ./pkgs {inherit final prev flakes;};
   in
     with pkgs.lib; {
       formatter.${system} = pkgs.alejandra;

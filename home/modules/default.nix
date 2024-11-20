@@ -7,5 +7,6 @@
   imports = [
     ./terminal
     ./neovim.nix
+    ./baseline.nix
   ];
 }

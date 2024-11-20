@@ -1,7 +1,13 @@
-final: prev:
+{
+  final,
+  prev,
+  flakes,
+}:
 with prev.lib; let
   inherit (final) callPackage fetchpatch;
 in {
+  homepage = flakes.homepage.packages.${final.system}.default;
+
   lib = callPackage ./lib {};
 
   st = prev.st.override {

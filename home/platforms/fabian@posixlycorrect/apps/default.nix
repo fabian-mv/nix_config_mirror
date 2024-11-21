@@ -29,7 +29,6 @@
     tdesktop
     usbutils
     virt-manager
-    vlc
     vpsfree-client
     vscodium-fhs
     zola

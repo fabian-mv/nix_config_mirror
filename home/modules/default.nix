@@ -9,5 +9,6 @@
     ./neovim.nix
     ./baseline.nix
     ./steam
+    ./yubikey.nix
   ];
 }

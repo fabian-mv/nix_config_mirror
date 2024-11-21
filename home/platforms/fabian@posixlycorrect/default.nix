@@ -18,6 +18,7 @@
       terminal.enable = true;
       neovim.enable = true;
       steam.enable = true;
+      yubikey.enable = true;
     };
   };
 

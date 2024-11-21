@@ -34,9 +34,6 @@
     vlc
     vpsfree-client
     vscodium-fhs
-    yubikey-manager
-    yubico-pam
-    yubikey-personalization
     zola
     zoom-us
   ];

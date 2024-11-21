@@ -8,23 +8,17 @@
   ];
 
   home.packages = with pkgs; [
-    calc
     calibre
     chromium
     darktable
     deluge
     discord
-    file
     firefox
     gcc
     gwenview
-    htop
-    killall
     kdenlive
     libreoffice-fresh
     lutris
-    man-pages
-    man-pages-posix
     mpv
     obs-studio
     openrct2
@@ -35,9 +29,6 @@
     runelite
     spotify
     tdesktop
-    tree
-    units
-    unzip
     usbutils
     virt-manager
     vlc
@@ -46,7 +37,6 @@
     yubikey-manager
     yubico-pam
     yubikey-personalization
-    zip
     zola
     zoom-us
   ];

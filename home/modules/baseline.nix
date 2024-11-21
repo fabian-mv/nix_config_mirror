@@ -12,5 +12,19 @@ in {
   };
   config = mkIf cfg.enable {
     xdg.enable = true;
+
+    home.packages = with pkgs; [
+      calc
+      file
+      git
+      htop
+      killall
+      man-pages
+      man-pages-posix
+      tree
+      units
+      unzip
+      zip
+    ];
   };
 }

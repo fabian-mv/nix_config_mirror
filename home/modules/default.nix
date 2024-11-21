@@ -10,5 +10,6 @@
     ./baseline.nix
     ./steam
     ./yubikey.nix
+    ./browsers.nix
   ];
 }

@@ -19,6 +19,7 @@
       neovim.enable = true;
       steam.enable = true;
       yubikey.enable = true;
+      browsers.enable = true;
     };
   };
 

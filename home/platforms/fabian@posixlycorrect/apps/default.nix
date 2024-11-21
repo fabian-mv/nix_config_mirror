@@ -9,11 +9,9 @@
 
   home.packages = with pkgs; [
     calibre
-    chromium
     darktable
     deluge
     discord
-    firefox
     gcc
     gwenview
     kdenlive

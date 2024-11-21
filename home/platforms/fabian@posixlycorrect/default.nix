@@ -6,22 +6,11 @@
   ...
 }: {
   imports = [
-    ./apps
+    ./apps.nix
     ./systemd
     ./gui
     ./isolation.nix
   ];
-
-  local = {
-    baseline.enable = true;
-    apps = {
-      terminal.enable = true;
-      neovim.enable = true;
-      steam.enable = true;
-      yubikey.enable = true;
-      browsers.enable = true;
-    };
-  };
 
   nix.registry = {
     "system".to = {

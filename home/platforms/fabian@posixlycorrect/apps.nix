@@ -4,8 +4,16 @@
   pkgs,
   ...
 }: {
-  imports = [
-  ];
+  local = {
+    baseline.enable = true;
+    apps = {
+      terminal.enable = true;
+      neovim.enable = true;
+      steam.enable = true;
+      yubikey.enable = true;
+      browsers.enable = true;
+    };
+  };
 
   home.packages = with pkgs; [
     calibre

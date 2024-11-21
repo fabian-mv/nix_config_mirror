@@ -8,5 +8,6 @@
     ./terminal
     ./neovim.nix
     ./baseline.nix
+    ./steam
   ];
 }

@@ -5,7 +5,6 @@
   ...
 }: {
   imports = [
-    ./steam
   ];
 
   home.packages = with pkgs; [

@@ -12,9 +12,14 @@
     ./isolation.nix
   ];
 
-  local.baseline.enable = true;
-  local.apps.terminal.enable = true;
-  local.apps.neovim.enable = true;
+  local = {
+    baseline.enable = true;
+    apps = {
+      terminal.enable = true;
+      neovim.enable = true;
+      steam.enable = true;
+    };
+  };
 
   nix.registry = {
     "system".to = {

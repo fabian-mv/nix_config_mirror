@@ -12,7 +12,7 @@
     ./isolation.nix
   ];
 
-  local.baseline = true;
+  local.baseline.enable = true;
   local.apps.terminal.enable = true;
   local.apps.neovim.enable = true;
 

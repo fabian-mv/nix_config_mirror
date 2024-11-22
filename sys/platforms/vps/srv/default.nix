@@ -20,7 +20,7 @@ with lib; {
     # ./authentik.nix  consumes too much RAM and serves no purpose for now
     ./paperless.nix
     ./trilium.nix
-    ./firefly.nix
+    # ./firefly.nix gnucash is better
     ./roundcube.nix
   ];
 }

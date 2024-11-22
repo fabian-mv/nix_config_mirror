@@ -21,5 +21,6 @@ with lib; {
     ./paperless.nix
     ./trilium.nix
     ./firefly.nix
+    ./roundcube.nix
   ];
 }

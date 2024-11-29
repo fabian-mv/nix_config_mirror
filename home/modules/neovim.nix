@@ -44,5 +44,8 @@ in {
         vim-multiple-cursors
       ];
     };
+    home.sessionVariables = {
+      "EDITOR" = "neovim";
+    };
   };
 }

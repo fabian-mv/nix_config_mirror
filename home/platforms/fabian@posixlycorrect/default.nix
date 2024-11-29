@@ -48,12 +48,7 @@
     username = "fabian";
     homeDirectory = "/home/fabian";
     sessionVariables = {
-      "EDITOR" = "nvim";
       "TERMINAL" = "kitty";
-    };
-    keyboard = {
-      layout = "us";
-      variant = "altgr-intl";
     };
   };
   programs.home-manager.enable = true;

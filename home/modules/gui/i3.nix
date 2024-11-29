@@ -6,7 +6,6 @@
 }:
 with lib; {
   xsession.windowManager.i3 = {
-    enable = true;
     package = pkgs.i3-gaps;
 
     config = let
@@ -87,17 +86,17 @@ with lib; {
         }
       ];
 
-      workspaceOutputAssign = [
-        {
-          output = "DP-1";
-          workspace = "1";
-        }
-        {
-          output = "DP-2";
-          workspace = "10";
-        }
-      ];
-
+      workspaceOutputAssign =
+        mapAttrsToList (
+          monitorId: v:
+            {
+              output = monitorId;
+            }
+            // optionalAttrs (v.initialI3Workspace != null) {
+              workspace = toString v.initialI3Workspace;
+            }
+        )
+        config.local.gui.monitors;
       bars = [];
     };
   };

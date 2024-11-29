@@ -11,5 +11,6 @@
     ./steam
     ./yubikey.nix
     ./browsers.nix
+    ./gui
   ];
 }

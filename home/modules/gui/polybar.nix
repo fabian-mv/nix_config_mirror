@@ -6,7 +6,6 @@
 }:
 with lib; {
   services.polybar = {
-    enable = true;
     package = pkgs.polybarFull;
     script = ''
       # Terminate already running bar instances
@@ -33,7 +32,7 @@ with lib; {
       };
 
       "bar/main" = {
-        monitor = "DP-1";
+        monitor = config.local.gui.primaryMonitor.monitorId;
         width = "100%";
         height = 30;
         offset-x = "0%";
@@ -82,7 +81,9 @@ with lib; {
       };
 
       "bar/secondary" = {
-        monitor = "DP-2";
+        monitor = head (attrNames (filterAttrs (monitorId: v:
+          !v.primary)
+        config.local.gui.monitors)); # this is bad. will fail if more than 2 monitors. this sets all monitors other than the primary one for this bar.
         "inherit" = "bar/main";
 
         modules-left = "i3";
